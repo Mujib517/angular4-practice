@@ -11,35 +11,44 @@ import 'rxjs/add/operator/toPromise';
 
 <button class="btn btn-primary" (click)="resolve()">Reload</button>
 
-    <p [@visibilityChanged]="visible">
-      animate Works!
-    </p>
+  
 
 
    <div class="col-sm-3">
-      <div class="well" *ngFor="let user of users" [@visibilityChanged]="visible">
+      <div class="well" *ngFor="let user of users" [@flyInOut]="'in'" >
          <h4>{{user.login}}</h4>
          <hr>
-         <div>
-            <img [src]="user.avatar_url" class="img-circle" width="200" height="200"/>
-         </div>
       </div>
    </div>
     
   `,
+
   animations: [
-    trigger('visibilityChanged', [
-      state('true', style({ opacity: 1 })),
-      state('false', style({ opacity: 0 })),
-      transition("*=>*", animate(400))
+    trigger('flyInOut', [
+      state('in', style({ transform: 'translateX(0)' })),
+      transition('void => *', [
+        style({ transform: 'translateX(-100%)' }),
+        animate(200)
+      ])
     ])
   ]
+
+
+  // animations: [
+  //   trigger('visibilityChanged', [
+  //     state('true', style({ opacity: 1 })),
+  //     state('false', style({ opacity: 0 })),
+  //     transition("*=>*", animate(400))
+  //   ])
+  // ]
 })
 export class AnimateComponent {
 
   visible = false;
   users: any[];
   obs: any;
+  next: number=0;
+  staggeringUsers: any[]=[];
 
   constructor(private http: Http) { }
 
@@ -67,5 +76,13 @@ export class AnimateComponent {
   resolve() {
     this.obs.subscribe(data => this.users = data);
     //cold observable will make an http call each time we subscribe to it.
+  }
+
+
+  doNext() {
+    console.log('doing next');
+    if (this.next < this.users.length) {
+      this.staggeringUsers.push(this.users[this.next++]);
+    }
   }
 }
