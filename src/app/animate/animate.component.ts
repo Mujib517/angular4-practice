@@ -11,15 +11,22 @@ import 'rxjs/add/operator/toPromise';
 
 <button class="btn btn-primary" (click)="resolve()">Reload</button>
 
-  
+<div class="row">
 
-
-   <div class="col-sm-3">
-      <div class="well" *ngFor="let user of users" [@flyInOut]="'in'" >
+   <div class="col-sm-3" *ngFor="let user of users" [@flyInOut]="'in'" >
+      <div class="well">
          <h4>{{user.login}}</h4>
          <hr>
+         <img [src]="user.avatar_url" width="100" height="100" class="img-circle"/>
+         <hr>
+         <div>
+            <input type="checkbox" [checked]="user.site_admin"/>
+         </div>
+         <div class="muted">{{user.type}}</div>
       </div>
+    
    </div>
+  </div>
     
   `,
 
